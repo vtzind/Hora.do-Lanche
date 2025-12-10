@@ -196,42 +196,6 @@
             font-size: 14px;
         }
         
-        .acai-options {
-            margin-top: 10px;
-            margin-bottom: 15px;
-        }
-
-        .acai-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            padding: 6px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .acai-option:hover {
-            background-color: rgba(76, 175, 80, 0.05);
-        }
-
-        .acai-option.selected {
-            background-color: rgba(76, 175, 80, 0.1);
-            border: 1px solid var(--accent);
-        }
-
-        .acai-option input[type="checkbox"] {
-            margin: 0;
-        }
-        
-        .recheio-info {
-            font-size: 12px;
-            color: var(--gray);
-            margin-top: 5px;
-            font-style: italic;
-        }
-        
         .cart-section {
             background-color: white;
             border-radius: 12px;
@@ -471,7 +435,7 @@
             <i class="fas fa-stopwatch"></i>
             <span>Hora do Lanche</span>
         </div>
-        <div class="slogan">Os melhores salgados e açaí da cidade!</div>
+        <div class="slogan">Os melhores salgados da cidade!</div>
     </header>
     
     <div class="container">
@@ -503,16 +467,6 @@
                 </h2>
                 <div class="menu-grid" id="bebidas-grid">
                     <!-- Itens de bebidas serão inseridos aqui via JavaScript -->
-                </div>
-            </div>
-            
-            <div class="menu-section">
-                <h2 class="section-title">
-                    <i class="fas fa-bowl-food"></i>
-                    Açaí
-                </h2>
-                <div class="menu-grid" id="acai-grid">
-                    <!-- Itens de açaí serão inseridos aqui via JavaScript -->
                 </div>
             </div>
         </div>
@@ -760,40 +714,6 @@
             }
         ];
 
-        const acai = [
-            {
-                id: 19,
-                name: "Açaí 150ML",
-                description: "Açaí 150ML com recheios à escolha.",
-                price: 3.50,
-                image: "açai.png"
-            },
-            {
-                id: 20,
-                name: "Açaí 200ML",
-                description: "Açaí 200ML com recheios à escolha.",
-                price: 6.00,
-                image: "açai.png"
-            },
-            {
-                id: 21,
-                name: "Açaí 300ML",
-                description: "Açaí 300ML com recheios à escolha.",
-                price: 8.00,
-                image: "açai.png"
-            },
-            {
-                id: 22,
-                name: "Açaí 500ML",
-                description: "Açaí 500ML com recheios à escolha.",
-                price: 15.00,
-                image: "açai.png"
-            }
-        ];
-
-        // Recheios para açaí - 8 OPÇÕES (SEM LIMITE de recheio)
-        const recheiosAcai = ["Leite em pó", "Paçoca", "Granola", "Chocobol", "Amendoim", "Sucrilhos", "Granulado", "Morango"];
-
         // Locais de entrega - COM OS 3 NOVOS LOCAIS ADICIONADOS
         const deliveryLocations = [
             { name: "Parque Primavera" },
@@ -818,7 +738,6 @@
         const salgadosUnitariosGrid = document.getElementById('salgados-unitarios-grid');
         const salgadosQuantidadeGrid = document.getElementById('salgados-quantidade-grid');
         const bebidasGrid = document.getElementById('bebidas-grid');
-        const acaiGrid = document.getElementById('acai-grid');
         const cartItems = document.getElementById('cart-items');
         const cartTotal = document.getElementById('cart-total');
         const checkoutBtn = document.getElementById('checkout-btn');
@@ -916,86 +835,6 @@
             });
         }
         
-        // Renderizar o menu de açaí
-        function renderAcai() {
-            acaiGrid.innerHTML = '';
-            
-            acai.forEach(item => {
-                const menuItem = document.createElement('div');
-                menuItem.className = 'menu-item';
-                
-                // Criar as opções de recheio como checkboxes
-                let flavorOptionsHTML = `
-                    <div class="acai-options">
-                        <div class="option-title" style="font-size: 14px; margin-bottom: 8px;">
-                            <i class="fas fa-plus"></i>
-                            Escolha quantos recheios quiser:
-                        </div>
-                `;
-                
-                recheiosAcai.forEach((recheio, index) => {
-                    flavorOptionsHTML += `
-                        <div class="acai-option" data-recheio="${recheio}">
-                            <input type="checkbox" name="acai-flavor-${item.id}" id="acai-${item.id}-${index}" value="${recheio}">
-                            <label for="acai-${item.id}-${index}">${recheio}</label>
-                        </div>
-                    `;
-                });
-                
-                flavorOptionsHTML += `
-                    <div class="recheio-info">Escolha quantos recheios quiser!</div>
-                    </div>
-                `;
-                
-                menuItem.innerHTML = `
-                    <div class="item-image">
-                        <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x180/9C27B0/FFFFFF?text=${encodeURIComponent('Açaí ' + item.name)}'">
-                    </div>
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-description">${item.description}</div>
-                    <div class="item-price">R$ ${item.price.toFixed(2)}</div>
-                    ${flavorOptionsHTML}
-                    <div class="quantity-control">
-                        <button class="quantity-btn" onclick="decreaseQuantity(${item.id})">-</button>
-                        <input type="text" class="quantity-input" id="quantity-${item.id}" value="0" readonly>
-                        <button class="quantity-btn" onclick="increaseQuantity(${item.id})">+</button>
-                    </div>
-                `;
-                
-                acaiGrid.appendChild(menuItem);
-                
-                // Adicionar event listeners para as opções de recheio
-                setTimeout(() => {
-                    const acaiOptions = menuItem.querySelectorAll('.acai-option');
-                    acaiOptions.forEach(option => {
-                        option.addEventListener('click', function() {
-                            const checkbox = this.querySelector('input[type="checkbox"]');
-                            
-                            // SEM LIMITE - comentado o limite de 4 recheios
-                            // Contar quantos recheios já estão selecionados
-                            // const selectedCount = menuItem.querySelectorAll('input[type="checkbox"]:checked').length;
-                            
-                            // Se já tem 4 selecionados e o usuário está tentando adicionar mais, não permitir
-                            // if (selectedCount >= 4 && !checkbox.checked) {
-                            //     alert('Você só pode selecionar até 4 recheios por açaí!');
-                            //     return;
-                            // }
-                            
-                            // Alternar estado do checkbox
-                            checkbox.checked = !checkbox.checked;
-                            
-                            // Atualizar visual da opção
-                            if (checkbox.checked) {
-                                this.classList.add('selected');
-                            } else {
-                                this.classList.remove('selected');
-                            }
-                        });
-                    });
-                }, 0);
-            });
-        }
-        
         // Renderizar opções de localização
         function renderDeliveryLocations() {
             locationOptions.innerHTML = '';
@@ -1029,7 +868,7 @@
             quantityInput.value = quantity + 1;
             
             // Adicionar ao carrinho
-            const allItems = [...salgadosUnitarios, ...salgadosQuantidade, ...bebidas, ...acai];
+            const allItems = [...salgadosUnitarios, ...salgadosQuantidade, ...bebidas];
             const item = allItems.find(i => i.id === itemId);
             
             // Verificar se é um pastel e obter o sabor selecionado
@@ -1169,15 +1008,6 @@
                     itemDetails += ` (${item.flavor})`;
                 }
                 
-                // Adicionar recheios para açaí
-                if (item.id >= 19 && item.id <= 22) {
-                    const selectedRecheios = document.querySelectorAll(`input[name="acai-flavor-${item.id}"]:checked`);
-                    if (selectedRecheios.length > 0) {
-                        const recheiosArray = Array.from(selectedRecheios).map(recheio => recheio.value);
-                        itemDetails += ` (${recheiosArray.join(', ')})`;
-                    }
-                }
-                
                 itemDetails += ` - R$ ${(item.price * item.quantity).toFixed(2)}`;
                 message += itemDetails + '\n';
             });
@@ -1272,7 +1102,6 @@
             renderSalgadosUnitarios();
             renderSalgadosQuantidade();
             renderBebidas();
-            renderAcai();
             renderDeliveryLocations();
             updateCart();
             setupEventListeners();
