@@ -67,6 +67,59 @@
             gap: 30px;
         }
         
+        /* Estilos das abas */
+        .tabs-container {
+            margin-bottom: 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 18px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .tab:hover {
+            background-color: rgba(255, 87, 34, 0.05);
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            background-color: rgba(255, 87, 34, 0.08);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         .menu-section {
             margin-bottom: 40px;
         }
@@ -407,6 +460,14 @@
             .cart-section {
                 position: static;
             }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                padding: 15px;
+            }
         }
         
         @media (max-width: 768px) {
@@ -427,6 +488,12 @@
                 font-size: 16px;
             }
         }
+        
+        @media (max-width: 480px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -440,7 +507,65 @@
     
     <div class="container">
         <div class="menu-column">
-            <div class="menu-section">
+            <!-- Abas de navegação -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <div class="tab active" data-tab="todos">
+                        <i class="fas fa-list"></i>
+                        Todos os Produtos
+                    </div>
+                    <div class="tab" data-tab="salgados-unitarios">
+                        <i class="fas fa-hamburger"></i>
+                        Salgados Unitários
+                    </div>
+                    <div class="tab" data-tab="mini-salgados">
+                        <i class="fas fa-cookie-bite"></i>
+                        Mini Salgados
+                    </div>
+                    <div class="tab" data-tab="bebidas">
+                        <i class="fas fa-wine-bottle"></i>
+                        Bebidas
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Conteúdo das abas -->
+            <div class="tab-content active" id="todos-tab">
+                <!-- Seção de Salgados Unitários -->
+                <div class="menu-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-hamburger"></i>
+                        Salgados Unitários
+                    </h2>
+                    <div class="menu-grid" id="todos-salgados-unitarios-grid">
+                        <!-- Itens de salgados unitários serão inseridos aqui via JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Seção de Mini Salgados -->
+                <div class="menu-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-cookie-bite"></i>
+                        Mini Salgados
+                    </h2>
+                    <div class="menu-grid" id="todos-mini-salgados-grid">
+                        <!-- Itens de mini salgados serão inseridos aqui via JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- Seção de Bebidas -->
+                <div class="menu-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-wine-bottle"></i>
+                        Bebidas
+                    </h2>
+                    <div class="menu-grid" id="todos-bebidas-grid">
+                        <!-- Itens de bebidas serão inseridos aqui via JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tab-content" id="salgados-unitarios-tab">
                 <h2 class="section-title">
                     <i class="fas fa-hamburger"></i>
                     Salgados Unitários
@@ -450,17 +575,17 @@
                 </div>
             </div>
             
-            <div class="menu-section">
+            <div class="tab-content" id="mini-salgados-tab">
                 <h2 class="section-title">
-                    <i class="fas fa-box"></i>
-                    Salgados em Quantidade
+                    <i class="fas fa-cookie-bite"></i>
+                    Mini Salgados
                 </h2>
-                <div class="menu-grid" id="salgados-quantidade-grid">
-                    <!-- Itens de salgados em quantidade serão inseridos aqui via JavaScript -->
+                <div class="menu-grid" id="mini-salgados-grid">
+                    <!-- Itens de mini salgados serão inseridos aqui via JavaScript -->
                 </div>
             </div>
             
-            <div class="menu-section">
+            <div class="tab-content" id="bebidas-tab">
                 <h2 class="section-title">
                     <i class="fas fa-wine-bottle"></i>
                     Bebidas
@@ -610,7 +735,7 @@
             }
         ];
 
-        const salgadosQuantidade = [
+        const miniSalgados = [
             {
                 id: 5,
                 name: "Salgadinhos (25 unidades)",
@@ -735,8 +860,11 @@
         let selectedLocation = null;
         
         // Elementos do DOM
+        const todosSalgadosUnitariosGrid = document.getElementById('todos-salgados-unitarios-grid');
+        const todosMiniSalgadosGrid = document.getElementById('todos-mini-salgados-grid');
+        const todosBebidasGrid = document.getElementById('todos-bebidas-grid');
         const salgadosUnitariosGrid = document.getElementById('salgados-unitarios-grid');
-        const salgadosQuantidadeGrid = document.getElementById('salgados-quantidade-grid');
+        const miniSalgadosGrid = document.getElementById('mini-salgados-grid');
         const bebidasGrid = document.getElementById('bebidas-grid');
         const cartItems = document.getElementById('cart-items');
         const cartTotal = document.getElementById('cart-total');
@@ -749,49 +877,74 @@
         const addressStreet = document.getElementById('address-street');
         const orderNotes = document.getElementById('order-notes');
         
-        // Renderizar o menu de salgados unitários
-        function renderSalgadosUnitarios() {
-            salgadosUnitariosGrid.innerHTML = '';
+        // Sistema de abas
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
             
-            salgadosUnitarios.forEach(item => {
-                const menuItem = document.createElement('div');
-                menuItem.className = 'menu-item';
-                
-                let flavorSection = '';
-                if (item.flavors) {
-                    flavorSection = `
-                        <div class="flavor-options">
-                            <select class="flavor-select" id="flavor-${item.id}">
-                                <option value="">Selecione o sabor</option>
-                                ${item.flavors.map(flavor => `<option value="${flavor}">${flavor}</option>`).join('')}
-                            </select>
-                        </div>
-                    `;
-                }
-                
-                menuItem.innerHTML = `
-                    <div class="item-image">
-                        <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x180/FF5722/FFFFFF?text=${encodeURIComponent(item.name)}'">
-                    </div>
-                    <div class="item-name">${item.name}</div>
-                    <div class="item-description">${item.description}</div>
-                    <div class="item-price">R$ ${item.price.toFixed(2)}</div>
-                    ${flavorSection}
-                    <div class="quantity-control">
-                        <button class="quantity-btn" onclick="decreaseQuantity(${item.id})">-</button>
-                        <input type="text" class="quantity-input" id="quantity-${item.id}" value="0" readonly>
-                        <button class="quantity-btn" onclick="increaseQuantity(${item.id})">+</button>
-                    </div>
-                `;
-                salgadosUnitariosGrid.appendChild(menuItem);
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remover classe active de todas as abas
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(tc => tc.classList.remove('active'));
+                    
+                    // Adicionar classe active na aba clicada
+                    this.classList.add('active');
+                    
+                    // Mostrar o conteúdo correspondente
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
             });
         }
         
-        // Renderizar o menu de salgados em quantidade
-        function renderSalgadosQuantidade() {
-            salgadosQuantidadeGrid.innerHTML = '';
+        // Função para renderizar um item do menu
+        function renderMenuItem(item, container) {
+            const menuItem = document.createElement('div');
+            menuItem.className = 'menu-item';
             
-            salgadosQuantidade.forEach(item => {
+            let flavorSection = '';
+            if (item.flavors) {
+                flavorSection = `
+                    <div class="flavor-options">
+                        <select class="flavor-select" id="flavor-${item.id}">
+                            <option value="">Selecione o sabor</option>
+                            ${item.flavors.map(flavor => `<option value="${flavor}">${flavor}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
+            }
+            
+            menuItem.innerHTML = `
+                <div class="item-image">
+                    <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x180/FF5722/FFFFFF?text=${encodeURIComponent(item.name)}'">
+                </div>
+                <div class="item-name">${item.name}</div>
+                <div class="item-description">${item.description}</div>
+                <div class="item-price">R$ ${item.price.toFixed(2)}</div>
+                ${flavorSection}
+                <div class="quantity-control">
+                    <button class="quantity-btn" onclick="decreaseQuantity(${item.id})">-</button>
+                    <input type="text" class="quantity-input" id="quantity-${item.id}" value="0" readonly>
+                    <button class="quantity-btn" onclick="increaseQuantity(${item.id})">+</button>
+                </div>
+            `;
+            container.appendChild(menuItem);
+        }
+        
+        // Renderizar o menu de salgados unitários (para aba específica)
+        function renderSalgadosUnitarios(container) {
+            container.innerHTML = '';
+            salgadosUnitarios.forEach(item => {
+                renderMenuItem(item, container);
+            });
+        }
+        
+        // Renderizar o menu de mini salgados (para aba específica)
+        function renderMiniSalgados(container) {
+            container.innerHTML = '';
+            miniSalgados.forEach(item => {
                 const menuItem = document.createElement('div');
                 menuItem.className = 'menu-item';
                 menuItem.innerHTML = `
@@ -807,14 +960,13 @@
                         <button class="quantity-btn" onclick="increaseQuantity(${item.id})">+</button>
                     </div>
                 `;
-                salgadosQuantidadeGrid.appendChild(menuItem);
+                container.appendChild(menuItem);
             });
         }
         
-        // Renderizar o menu de bebidas
-        function renderBebidas() {
-            bebidasGrid.innerHTML = '';
-            
+        // Renderizar o menu de bebidas (para aba específica)
+        function renderBebidas(container) {
+            container.innerHTML = '';
             bebidas.forEach(item => {
                 const menuItem = document.createElement('div');
                 menuItem.className = 'menu-item';
@@ -831,7 +983,7 @@
                         <button class="quantity-btn" onclick="increaseQuantity(${item.id})">+</button>
                     </div>
                 `;
-                bebidasGrid.appendChild(menuItem);
+                container.appendChild(menuItem);
             });
         }
         
@@ -868,7 +1020,7 @@
             quantityInput.value = quantity + 1;
             
             // Adicionar ao carrinho
-            const allItems = [...salgadosUnitarios, ...salgadosQuantidade, ...bebidas];
+            const allItems = [...salgadosUnitarios, ...miniSalgados, ...bebidas];
             const item = allItems.find(i => i.id === itemId);
             
             // Verificar se é um pastel e obter o sabor selecionado
@@ -1099,9 +1251,18 @@
         
         // Inicializar
         function init() {
-            renderSalgadosUnitarios();
-            renderSalgadosQuantidade();
-            renderBebidas();
+            setupTabs();
+            
+            // Renderizar conteúdo para a aba "Todos"
+            renderSalgadosUnitarios(todosSalgadosUnitariosGrid);
+            renderMiniSalgados(todosMiniSalgadosGrid);
+            renderBebidas(todosBebidasGrid);
+            
+            // Renderizar conteúdo para abas específicas
+            renderSalgadosUnitarios(salgadosUnitariosGrid);
+            renderMiniSalgados(miniSalgadosGrid);
+            renderBebidas(bebidasGrid);
+            
             renderDeliveryLocations();
             updateCart();
             setupEventListeners();
